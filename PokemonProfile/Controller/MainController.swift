@@ -73,6 +73,10 @@ extension MainController: UITableViewDelegate, UITableViewDataSource {
         cell.phoneNumberLabel.text = list[indexPath.item].phoneNumber
         cell.profileImageView.image = UIImage(data: list[indexPath.item].profileImage!)
         cell.key = list[indexPath.item].key
+        // 셀에 커스텀 구분선 추가 (윗줄을 없애고 아랫줄만 표시)
+        let separator = UIView(frame: CGRect(x: 15, y: cell.frame.height - 1, width: cell.frame.width - 30, height: 1))
+        separator.backgroundColor = .lightGray
+        cell.addSubview(separator)
         
         return cell
     }
@@ -92,27 +96,26 @@ extension MainController: UITableViewDelegate, UITableViewDataSource {
         mainView.profileTableView.deselectRow(at: indexPath, animated: true)
     }
     
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        return .delete
-    }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
+    // 스와이프 액션 설정 (스와이프할 때 표시될 커스텀 액션 설정)
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: "삭제") { (action, view, completionHandler) in
             let alert = UIAlertController(title: "삭제", message: "삭제 하시겠습니까?", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "취소", style: .default) { _ in
-              return
+                completionHandler(false) // 액션 완료 상태를 false로 설정
             })
             alert.addAction(UIAlertAction(title: "확인", style: .default) { [self] _ in
                 let manageController = ManageController()
                 manageController.deleteData(list[indexPath.item].key!)
                 list.remove(at: indexPath.item)
-//                tableView.beginUpdates()
                 tableView.deleteRows(at: [indexPath], with: .fade)
-//                tableView.layoutIfNeeded()
-//                tableView.endUpdates()
+                completionHandler(true) // 액션 완료 상태를 true로 설정
             })
             self.present(alert, animated: true, completion: nil)
         }
+        deleteAction.backgroundColor = .red // 삭제 버튼의 배경색 설정
+        let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+        configuration.performsFirstActionWithFullSwipe = false // 전체 스와이프 시 첫 번째 액션 실행 여부 설정
+        return configuration
     }
 }
 
