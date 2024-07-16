@@ -8,6 +8,6 @@
 
 // 추가페이지와 수정페이지 상태값
 enum Mode {
-    case create
-    case update
+  case create
+  case update
 }

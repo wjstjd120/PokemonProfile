@@ -11,11 +11,11 @@ import CoreData
 
 @objc(PokemonProfile)
 public class PokemonProfile: NSManagedObject {
-    public static let className = "PokemonProfile"
-    public enum Key {
-        static let key = "key"
-        static let name = "name"
-        static let phoneNumber = "phoneNumber"
-        static let profileImage = "profileImage"
-    }
+  public static let className = "PokemonProfile"
+  public enum Key {
+    static let key = "key"
+    static let name = "name"
+    static let phoneNumber = "phoneNumber"
+    static let profileImage = "profileImage"
+  }
 }
